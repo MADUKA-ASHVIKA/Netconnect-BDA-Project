@@ -41,5 +41,8 @@
         <name>hive.server2.transport.mode</name>
         <value>binary</value>
     </property>
-
+    <property>
+    <name>hive.server2.enable.doAs</name>
+    <value>false</value>
+</property>
 </configuration>

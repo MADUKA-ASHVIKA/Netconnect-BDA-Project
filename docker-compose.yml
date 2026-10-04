@@ -7,6 +7,7 @@ services:
     volumes:
       - namenode_data:/tmp/hadoop-root/dfs/name
       - ./config/hadoop:/opt/hadoop/etc/hadoop
+      - ./lib/commons-collections-3.2.2.jar:/opt/hadoop/share/hadoop/common/lib/commons-collections-3.2.2.jar:ro
     ports:
       - "9870:9870"
       - "8020:8020"
@@ -52,9 +53,11 @@ services:
       - resourcemanager
     volumes:
       - ./config/hadoop:/opt/hadoop/etc/hadoop
+      - ./lib/commons-collections-3.2.2.jar:/opt/hadoop/share/hadoop/common/lib/commons-collections-3.2.2.jar:ro
     command: ["yarn", "nodemanager"]
     networks:
       - netconnect
+
   hive:
     image: apache/hive:4.0.1
     container_name: netconnect-hive
@@ -74,6 +77,21 @@ services:
       - "10002:10002"
     networks:
       - netconnect
+
+  pig:
+    image: openeuler/pig:0.17.0-oe2403sp2
+    container_name: netconnect-pig
+    hostname: pig
+    depends_on:
+      - namenode
+      - datanode
+      - resourcemanager
+      - nodemanager
+    entrypoint: ["/bin/bash"]
+    command: ["-c", "while true; do sleep 3600; done"]
+    networks:
+      - netconnect
+
 volumes:
   namenode_data:
   datanode_data:

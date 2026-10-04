@@ -45,13 +45,27 @@
         <name>mapreduce.reduce.cpu.vcores</name>
         <value>1</value>
     </property>
-    <property>
-    <name>yarn.app.mapreduce.am.resource.mb</name>
-    <value>512</value>
-</property>
 
-<property>
-    <name>yarn.app.mapreduce.am.command-opts</name>
-    <value>-Xmx384m</value>
-</property>
+    <property>
+        <name>yarn.app.mapreduce.am.resource.mb</name>
+        <value>512</value>
+    </property>
+
+    <property>
+        <name>yarn.app.mapreduce.am.command-opts</name>
+        <value>-Xmx384m</value>
+    </property>
+
+    <!-- Java module access required by Hive 4.0.1 on Java 17 -->
+
+    <property>
+        <name>mapreduce.map.java.opts</name>
+        <value>--add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED</value>
+    </property>
+
+    <property>
+        <name>mapreduce.reduce.java.opts</name>
+        <value>--add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED</value>
+    </property>
+
 </configuration>
