@@ -1,0 +1,84 @@
+services:
+  namenode:
+    image: apache/hadoop:3.5.0
+    container_name: netconnect-namenode
+    hostname: namenode
+    user: root
+    volumes:
+      - namenode_data:/tmp/hadoop-root/dfs/name
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+    ports:
+      - "9870:9870"
+      - "8020:8020"
+    command: ["hdfs", "namenode"]
+    networks:
+      - netconnect
+
+  datanode:
+    image: apache/hadoop:3.5.0
+    container_name: netconnect-datanode
+    hostname: datanode
+    user: root
+    depends_on:
+      - namenode
+    volumes:
+      - datanode_data:/tmp/hadoop-root/dfs/data
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+    command: ["hdfs", "datanode"]
+    networks:
+      - netconnect
+
+  resourcemanager:
+    image: apache/hadoop:3.5.0
+    container_name: netconnect-resourcemanager
+    hostname: resourcemanager
+    user: root
+    depends_on:
+      - namenode
+    volumes:
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+    ports:
+      - "8088:8088"
+    command: ["yarn", "resourcemanager"]
+    networks:
+      - netconnect
+
+  nodemanager:
+    image: apache/hadoop:3.5.0
+    container_name: netconnect-nodemanager
+    hostname: nodemanager
+    user: root
+    depends_on:
+      - resourcemanager
+    volumes:
+      - ./config/hadoop:/opt/hadoop/etc/hadoop
+    command: ["yarn", "nodemanager"]
+    networks:
+      - netconnect
+  hive:
+    image: apache/hive:4.0.1
+    container_name: netconnect-hive
+    hostname: hive
+    depends_on:
+      - namenode
+    environment:
+      SERVICE_NAME: hiveserver2
+      IS_RESUME: "true"
+      HIVE_SERVER2_THRIFT_PORT: "10000"
+      HIVE_CUSTOM_CONF_DIR: "/hive_custom_conf"
+    volumes:
+      - ./config/hadoop:/hive_custom_conf
+      - hive_data:/opt/hive/data
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+    networks:
+      - netconnect
+volumes:
+  namenode_data:
+  datanode_data:
+  hive_data:
+
+networks:
+  netconnect:
+    driver: bridge

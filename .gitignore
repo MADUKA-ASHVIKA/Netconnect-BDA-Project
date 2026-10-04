@@ -1,0 +1,8 @@
+target/
+*.class
+.env
+.idea/
+.vscode/
+*.log
+output/
+data/cdr_600_backup.csv
