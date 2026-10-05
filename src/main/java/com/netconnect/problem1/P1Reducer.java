@@ -23,11 +23,11 @@ public class P1Reducer extends Reducer<Text, IntWritable, Text, Text> {
             }
         }
 
-        double dropRate = (double) droppedCalls / totalCalls;
+        double dropRate = (double) droppedCalls / totalCalls * 100;
 
         String result = totalCalls + "\t"
-                + droppedCalls + "\t"
-                + String.format("%.4f", dropRate);
+        + droppedCalls + "\t"
+        + String.format("%.2f%%", dropRate);
 
         context.write(key, new Text(result));
     }
